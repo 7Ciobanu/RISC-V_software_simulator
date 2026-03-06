@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>7871c7c1-5154-46a0-bb18-c8d7e43df78c</ProjectGuid>
+    <ProjectGuid>{7871C7C1-5154-46A0-BB18-C8D7E43DF78C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RiscV.Core</RootNamespace>
@@ -31,24 +31,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="CPU\CPU.cs" />
+    <Compile Include="CPU\ProgramCounter.cs" />
+    <Compile Include="Hardware\ALU.cs" />
+    <Compile Include="Hardware\Memory.cs" />
+    <Compile Include="Hardware\Registers.cs" />
+    <Compile Include="Instructions\Instruction.cs" />
+    <Compile Include="Instructions\InstructionDecoder.cs" />
+    <Compile Include="Instructions\InstructionType.cs" />
+    <Compile Include="Pipeline\ExecuteStage.cs" />
+    <Compile Include="Pipeline\InstructionDecodeStage.cs" />
+    <Compile Include="Pipeline\InstructionFetchStage.cs" />
+    <Compile Include="Pipeline\MemoryStage.cs" />
+    <Compile Include="Pipeline\PipelineStage.cs" />
+    <Compile Include="Pipeline\WriteBackStage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>

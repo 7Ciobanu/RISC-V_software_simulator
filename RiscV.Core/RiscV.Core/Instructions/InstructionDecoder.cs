@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiscV.Core
+namespace RiscV.Core.Instructions
 {
-    public class Class1
+    internal class InstructionDecoder
     {
     }
 }
