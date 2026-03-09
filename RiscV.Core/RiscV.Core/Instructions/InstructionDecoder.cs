@@ -8,5 +8,10 @@ namespace RiscV.Core.Instructions
 {
     internal class InstructionDecoder
     {
+        public void Decoder(UInt32 rawInstruction)
+        {
+            Instruction instr = new Instruction(rawInstruction);
+
+        }
     }
 }

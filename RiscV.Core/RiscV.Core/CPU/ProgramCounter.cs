@@ -8,26 +8,25 @@ namespace RiscV.Core.CPU
 {
     internal class ProgramCounter
     {
-        private uint pc;
+        private uint PC;
 
-        public uint Get() 
+        public uint getPC() 
         {
-            return pc; 
+            return PC; 
         }
 
-        public void Set(uint value) 
-        { 
-            pc = value; 
+        public void SetPC(uint value) 
+        {
+            PC = value; 
         }
 
         public void Increment(uint step = 4)
         {
-            pc+= step;
+            PC += step;
         }
-
         public void Reset()
         {
-            pc = 0;
+            PC = 0;
         }
     }
 }

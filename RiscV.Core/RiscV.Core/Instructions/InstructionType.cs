@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace RiscV.Core.Instructions
 {
-    internal class InstructionType
+    enum InstructionType
     {
+        R,  // Register-Register 
+        I,  // Immediate 
+        S,  // Store 
+        B,  // Branch 
+        U,  // Upper immediate 
+        J   // Jump 
     }
 }
