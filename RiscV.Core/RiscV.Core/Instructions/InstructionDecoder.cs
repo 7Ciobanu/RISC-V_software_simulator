@@ -8,7 +8,7 @@ namespace RiscV.Core.Instructions
 {
     internal class InstructionDecoder
     {
-        public Instruction Decoder(UInt32 rawInstruction)
+        public Instruction Decode(UInt32 rawInstruction)
         {
             Instruction instr = new Instruction(rawInstruction);
             UInt32 mask= 0x0000007F;

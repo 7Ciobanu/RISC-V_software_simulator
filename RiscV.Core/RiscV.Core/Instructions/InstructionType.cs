@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiscV.Core.Instructions
 {
-    enum InstructionType
+    public enum InstructionType
     {
         R,  // Register-Register 
         I,  // Immediate 
@@ -14,5 +14,13 @@ namespace RiscV.Core.Instructions
         B,  // Branch 
         U,  // Upper immediate 
         J   // Jump 
+    }
+    struct DecodedInstruction
+    {
+        public Instruction instruction;
+        public int rs1;
+        public int rs2;
+        public uint pc;
+        public int immediate;
     }
 }

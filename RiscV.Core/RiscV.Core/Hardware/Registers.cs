@@ -8,14 +8,14 @@ namespace RiscV.Core.Hardware
 {
     internal class Registers
     {
-        private UInt32[] registers;
+        private int[] registers;
 
         public Registers()
         {
-            registers = new UInt32[32];
+            registers = new int[32];
         }
 
-        public void Write(int index, UInt32 value)
+        public void Write(int index, int value)
         {
             if (index < 0 || index>31)
                 throw new ArgumentOutOfRangeException("index");
@@ -26,7 +26,7 @@ namespace RiscV.Core.Hardware
             registers[index] = value;
         }
 
-        public UInt32 Read(int index)
+        public int Read(int index)
         {
             if (index < 0 || index > 31)
                 throw new ArgumentOutOfRangeException("index");
