@@ -18,6 +18,7 @@ namespace RiscV.Core.Instructions
         private byte funct3;
         private byte funct7;
         private int immediate;
+        private OperationType operation;
 
         public Instruction(uint rawInstruction)
         {
@@ -98,6 +99,15 @@ namespace RiscV.Core.Instructions
         public void SetImmediate(int value)
         {
             immediate = value;
+        }
+
+        public OperationType GetOperationType()
+        {
+            return operation;
+        }
+        public void SetOperationType(OperationType value)
+        {
+            operation = value;
         }
     }
 }
