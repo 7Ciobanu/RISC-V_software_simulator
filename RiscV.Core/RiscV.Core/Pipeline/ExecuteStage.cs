@@ -16,8 +16,8 @@ namespace RiscV.Core.Pipeline
             output.writeToRegister = false;
             output.branchTaken = false;
 
-            int rs1Val = regs.Read(input.instruction.GetRs1());
-            int rs2Val = regs.Read(input.instruction.GetRs2());
+            int rs1Val = input.rs1;
+            int rs2Val = input.rs2;
             int imm = input.instruction.GetImmediate();
 
             bool isBranch = false;

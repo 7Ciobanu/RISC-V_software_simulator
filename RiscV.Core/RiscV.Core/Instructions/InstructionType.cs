@@ -55,9 +55,18 @@ namespace RiscV.Core.Instructions
     {
         public int result;
         public int memoryAddress;
-        public bool writeToRegister;
-        public byte rd;
         public uint nextPC;
+        public byte rd;
+        public bool writeToRegister;
         public bool branchTaken;
+    }
+
+    struct MemoryResult
+    {
+        public int result;
+        public uint nextPC;
+        public byte rd;
+        public bool writeToRegister;
+        
     }
 }

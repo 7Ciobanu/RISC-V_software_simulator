@@ -19,13 +19,10 @@ namespace RiscV.Core.Pipeline
 
         public UInt32 FetchInstruction()
         {
-            UInt32 instruction;
             uint currentPC=pc.getPC();
 
-            instruction= (uint)memory.ReadWord((int)currentPC);
-            pc.SetPC(currentPC + 4);
-
-            return instruction;
+            uint instr = (uint)memory.ReadWord((int)currentPC);
+            return instr;
         }
     }
 }

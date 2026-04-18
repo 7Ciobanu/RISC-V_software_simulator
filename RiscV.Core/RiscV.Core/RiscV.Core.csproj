@@ -53,7 +53,6 @@
     <Compile Include="Pipeline\InstructionDecodeStage.cs" />
     <Compile Include="Pipeline\InstructionFetchStage.cs" />
     <Compile Include="Pipeline\MemoryStage.cs" />
-    <Compile Include="Pipeline\PipelineStage.cs" />
     <Compile Include="Pipeline\WriteBackStage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
