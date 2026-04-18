@@ -51,8 +51,13 @@ namespace RiscV.Core.Instructions
         ECALL, EBREAK
     }
 
-    //struct ExecutionResult
-    //{
-    
-    //}
+    struct ExecuteResult
+    {
+        public int result;
+        public int memoryAddress;
+        public bool writeToRegister;
+        public byte rd;
+        public uint nextPC;
+        public bool branchTaken;
+    }
 }
