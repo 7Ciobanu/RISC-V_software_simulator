@@ -77,5 +77,17 @@ namespace RiscV.Core.Hardware
         {
             Array.Clear(memory, 0, size);
         }
+
+        public void LoadProgram(uint[] program, uint addressToStart = 0)
+        {
+            if(addressToStart + program.Length > size)
+                throw new ArgumentOutOfRangeException("The program is too big");
+
+            for (int i = 0; i < program.Length; ++i)
+            {
+                WriteWord((int)(addressToStart + i * 4), (int)program[i]);
+            }
+
+        }
     }
 }
