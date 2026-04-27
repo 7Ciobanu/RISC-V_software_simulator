@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RiscV.Core.CPU
 {
-    internal class CPU
+    public class CPU
     {
         private ProgramCounter pc;
         private Registers registers;
@@ -34,26 +34,46 @@ namespace RiscV.Core.CPU
             writeBackStage = new WriteBackStage();
         }
 
-        public void ExecuteCycle()
+        public bool ExecuteCycle()
         {
-            //FETCH
-            uint currentPC=pc.getPC();
-            UInt32 rawInstruction = fetchStage.FetchInstruction();
+            try
+            {
+                //FETCH
+                uint currentPC = pc.getPC();
+                UInt32 rawInstruction = fetchStage.FetchInstruction();
 
-            //DECODE
-            DecodedInstruction decoded = decodeStage.DecodeInstructions(rawInstruction, currentPC);
+                //DECODE
+                DecodedInstruction decoded = decodeStage.DecodeInstructions(rawInstruction, currentPC);
 
-            //EXECUTE
-            ExecuteResult executeResult = executeStage.Execute(decoded, registers, currentPC);
+                if (rawInstruction == 0)
+                    return false;
 
-            //MEMORY
-            MemoryResult memoryResult = memoryStage.Execute(executeResult, memory, decoded.instruction.GetOperationType());
+                if (decoded.instruction.GetOperationType() == OperationType.ECALL)
+                {
+                    int a7 = registers.Read(17); // x17
 
-            //WRITE BACK
-            writeBackStage.Execute(memoryResult, registers);
+                    if (a7 == 10)
+                        return false;
+                }
 
-            //UPDATE PC
-            pc.SetPC(memoryResult.nextPC);
+                //EXECUTE
+                ExecuteResult executeResult = executeStage.Execute(decoded, registers, currentPC);
+
+                //MEMORY
+                MemoryResult memoryResult = memoryStage.Execute(executeResult, memory, decoded.instruction.GetOperationType());
+
+                //WRITE BACK
+                writeBackStage.Execute(memoryResult, registers);
+
+                //UPDATE PC
+                pc.SetPC(memoryResult.nextPC);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
 
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiscV.Core.Hardware
 {
-    internal class Memory
+    public class Memory
     {
         private const int BYTE_SIZE = 1;
         private const int HALFWORD_SIZE = 2;
@@ -88,6 +88,11 @@ namespace RiscV.Core.Hardware
                 WriteWord((int)(addressToStart + i * 4), (int)program[i]);
             }
 
+        }
+
+        public int GetSize()
+        {
+            return size;
         }
     }
 }

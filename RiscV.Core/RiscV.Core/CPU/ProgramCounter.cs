@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiscV.Core.CPU
 {
-    internal class ProgramCounter
+    public class ProgramCounter
     {
         private uint PC;
 

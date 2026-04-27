@@ -59,6 +59,7 @@ namespace RiscV.Core.Instructions
         public byte rd;
         public bool writeToRegister;
         public bool branchTaken;
+        public bool stop;
     }
 
     struct MemoryResult

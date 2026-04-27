@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiscV.Core.Hardware
 {
-    internal class Registers
+    public class Registers
     {
         private int[] registers;
 
