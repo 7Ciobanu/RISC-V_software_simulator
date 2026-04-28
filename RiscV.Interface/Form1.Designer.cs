@@ -36,8 +36,9 @@
             this.pcLabel = new System.Windows.Forms.Label();
             this.resetButton = new System.Windows.Forms.Button();
             this.assembledRichText = new System.Windows.Forms.RichTextBox();
-            this.compileButton = new System.Windows.Forms.Button();
+            this.assembleButton = new System.Windows.Forms.Button();
             this.runButton = new System.Windows.Forms.Button();
+            this.loadButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.memoryGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.registersGrid)).BeginInit();
             this.SuspendLayout();
@@ -85,7 +86,7 @@
             // 
             // stepButton
             // 
-            this.stepButton.Location = new System.Drawing.Point(77, 11);
+            this.stepButton.Location = new System.Drawing.Point(139, 11);
             this.stepButton.Margin = new System.Windows.Forms.Padding(2);
             this.stepButton.Name = "stepButton";
             this.stepButton.Size = new System.Drawing.Size(42, 35);
@@ -115,13 +116,14 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(169, 11);
+            this.resetButton.Location = new System.Drawing.Point(231, 11);
             this.resetButton.Margin = new System.Windows.Forms.Padding(2);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(49, 35);
             this.resetButton.TabIndex = 5;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // assembledRichText
             // 
@@ -132,20 +134,20 @@
             this.assembledRichText.TabIndex = 8;
             this.assembledRichText.Text = "";
             // 
-            // compileButton
+            // assembleButton
             // 
-            this.compileButton.Location = new System.Drawing.Point(11, 11);
-            this.compileButton.Margin = new System.Windows.Forms.Padding(2);
-            this.compileButton.Name = "compileButton";
-            this.compileButton.Size = new System.Drawing.Size(62, 35);
-            this.compileButton.TabIndex = 9;
-            this.compileButton.Text = "Compile";
-            this.compileButton.UseVisualStyleBackColor = true;
-            this.compileButton.Click += new System.EventHandler(this.compileButton_Click);
+            this.assembleButton.Location = new System.Drawing.Point(11, 11);
+            this.assembleButton.Margin = new System.Windows.Forms.Padding(2);
+            this.assembleButton.Name = "assembleButton";
+            this.assembleButton.Size = new System.Drawing.Size(62, 35);
+            this.assembleButton.TabIndex = 9;
+            this.assembleButton.Text = "Assemble";
+            this.assembleButton.UseVisualStyleBackColor = true;
+            this.assembleButton.Click += new System.EventHandler(this.assembleButton_Click);
             // 
             // runButton
             // 
-            this.runButton.Location = new System.Drawing.Point(123, 11);
+            this.runButton.Location = new System.Drawing.Point(185, 11);
             this.runButton.Margin = new System.Windows.Forms.Padding(2);
             this.runButton.Name = "runButton";
             this.runButton.Size = new System.Drawing.Size(42, 35);
@@ -154,13 +156,25 @@
             this.runButton.UseVisualStyleBackColor = true;
             this.runButton.Click += new System.EventHandler(this.runButton_Click);
             // 
+            // loadButton
+            // 
+            this.loadButton.Location = new System.Drawing.Point(77, 11);
+            this.loadButton.Margin = new System.Windows.Forms.Padding(2);
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(58, 35);
+            this.loadButton.TabIndex = 11;
+            this.loadButton.Text = "Load";
+            this.loadButton.UseVisualStyleBackColor = true;
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(919, 614);
+            this.Controls.Add(this.loadButton);
             this.Controls.Add(this.runButton);
-            this.Controls.Add(this.compileButton);
+            this.Controls.Add(this.assembleButton);
             this.Controls.Add(this.assembledRichText);
             this.Controls.Add(this.registersGrid);
             this.Controls.Add(this.memoryGrid);
@@ -190,8 +204,9 @@
         private System.Windows.Forms.RichTextBox programRichText;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.RichTextBox assembledRichText;
-        private System.Windows.Forms.Button compileButton;
+        private System.Windows.Forms.Button assembleButton;
         private System.Windows.Forms.Button runButton;
+        private System.Windows.Forms.Button loadButton;
     }
 }
 

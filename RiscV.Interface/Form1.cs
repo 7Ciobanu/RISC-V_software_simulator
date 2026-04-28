@@ -21,7 +21,9 @@ namespace RiscV.Interface
         ProgramCounter pc;
 
         bool isRunning = false;
-
+        bool isFirstUpdate = true;
+        bool suppressHighlight = false;
+        List<uint> lastProgram = new List<uint>();
 
         public Form1()
         {
@@ -56,45 +58,42 @@ namespace RiscV.Interface
 
         void UpdateInterface()
         {
+            if (isFirstUpdate)
+            {
+                FillAllWithoutHighlight();
+                isFirstUpdate = false;
+                return;
+            }
+
+            UpdateRegisters();
+            UpdateMemory();
+            UpdatePC();
+        }
+
+        void FillAllWithoutHighlight()
+        {
             for (int i = 0; i < 32; i++)
             {
-                int value = registers.Read(i);
-                var cell = registersGrid.Rows[i].Cells[1];
-                string newText = "0x" + value.ToString("X8");
-
-                if (cell.Value == null || cell.Value.ToString() != newText)
-                {
-                    cell.Value = newText;
-                    registersGrid.Rows[i].DefaultCellStyle.BackColor = Color.Yellow;
-
-                    registersGrid.FirstDisplayedScrollingRowIndex = i;
-
-                    var rowIndex = i;
-
-                    Task.Delay(200).ContinueWith(_ =>
-                    {
-                        this.Invoke((Action)(() =>
-                        {
-                            registersGrid.Rows[rowIndex].DefaultCellStyle.BackColor = Color.White;
-                        }));
-                    });
-                }
+                registersGrid.Rows[i].Cells[1].Value =
+                    "0x" + registers.Read(i).ToString("X8");
             }
-            pcTextBox.Text = "0x" + cpu.GetPC().ToString("X8");
 
             int totalRows = memory.GetSize() / 4;
 
             for (int i = 0; i < totalRows; i++)
             {
                 int addr = i * 4;
-                int value = memory.ReadWord(addr);
-
-                memoryGrid.Rows[i].Cells[1].Value = "0x" + value.ToString("X8");
+                memoryGrid.Rows[i].Cells[1].Value =
+                    "0x" + memory.ReadWord(addr).ToString("X8");
             }
+
+            UpdatePC();
         }
 
         void LoadProgram(List<uint> program)
         {
+            suppressHighlight = true;
+
             memory.Reset();
             pc.Reset();
 
@@ -105,6 +104,10 @@ namespace RiscV.Interface
                 memory.WriteWord(address, (int)instr);
                 address += 4;
             }
+
+            UpdateInterface();
+
+            suppressHighlight = false;
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
@@ -125,12 +128,11 @@ namespace RiscV.Interface
             UpdateInterface();
         }
 
-        private void compileButton_Click(object sender, EventArgs e)
+        private void assembleButton_Click(object sender, EventArgs e)
         {
             string[] lines = programRichText.Lines;
 
-            List<uint> program = new List<uint>();
-
+            lastProgram.Clear();
             assembledRichText.Clear();
 
             foreach (var line in lines)
@@ -141,7 +143,7 @@ namespace RiscV.Interface
                 try
                 {
                     uint instr = assembler.AssembleLine(line);
-                    program.Add(instr);
+                    lastProgram.Add(instr);
 
                     assembledRichText.AppendText(instr.ToString("X8") + "\n");
                 }
@@ -151,9 +153,6 @@ namespace RiscV.Interface
                     return;
                 }
             }
-
-            LoadProgram(program);
-            UpdateInterface();
 
         }
 
@@ -178,6 +177,106 @@ namespace RiscV.Interface
                 UpdateInterface();
                 await Task.Delay(100);
             }
+        }
+
+        async void HighlightRow(DataGridView grid, int rowIndex, Color startColor)
+        {
+            grid.FirstDisplayedScrollingRowIndex = rowIndex;
+
+            int steps = 10;
+            int delay = 200; 
+
+            for (int i = 0; i <= steps; i++)
+            {
+                double t = (double)i / steps;
+
+                int r = (int)(startColor.R + (255 - startColor.R) * t);
+                int g = (int)(startColor.G + (255 - startColor.G) * t);
+                int b = (int)(startColor.B + (255 - startColor.B) * t);
+
+                this.Invoke((Action)(() =>
+                {
+                    grid.Rows[rowIndex].DefaultCellStyle.BackColor = Color.FromArgb(r, g, b);
+                }));
+
+                await Task.Delay(delay);
+            }
+
+            grid.Rows[rowIndex].DefaultCellStyle.BackColor = Color.White;
+        }
+
+        void UpdateRegisters()
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                int value = registers.Read(i);
+                var cell = registersGrid.Rows[i].Cells[1];
+                string newText = "0x" + value.ToString("X8");
+
+                if (cell.Value == null || cell.Value.ToString() != newText)
+                {
+                    cell.Value = newText;
+                    if (!suppressHighlight)
+                    {
+                        HighlightRow(registersGrid, i, Color.LightGoldenrodYellow);
+                    }
+                }
+            }
+        }
+
+        void UpdateMemory()
+        {
+            int totalRows = memory.GetSize() / 4;
+
+            for (int i = 0; i < totalRows; i++)
+            {
+                int addr = i * 4;
+                int value = memory.ReadWord(addr);
+
+                var cell = memoryGrid.Rows[i].Cells[1];
+                string newText = "0x" + value.ToString("X8");
+
+                if (cell.Value == null || cell.Value.ToString() != newText)
+                {
+                    cell.Value = newText;
+                    if (!suppressHighlight)
+                    {
+                        HighlightRow(memoryGrid, i, Color.LightGoldenrodYellow);
+                    }
+                }
+            }
+        }
+
+        void UpdatePC()
+        {
+            pcTextBox.Text = "0x" + cpu.GetPC().ToString("X8");
+        }
+
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            isRunning = false;
+            runButton.Text = "Run";
+
+            cpu.Reset();
+            memory.Reset();
+            pc.Reset();
+
+            assembledRichText.Clear();
+
+            isFirstUpdate = true;
+
+            UpdateInterface();
+        }
+
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+            if (lastProgram.Count == 0)
+            {
+                MessageBox.Show("Nothing to load");
+                return;
+            }
+
+            LoadProgram(lastProgram);
         }
     }
 }
