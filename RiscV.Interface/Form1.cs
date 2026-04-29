@@ -42,7 +42,8 @@ namespace RiscV.Interface
 
             for (int i = 0; i < 32; i++)
             {
-                registersGrid.Rows.Add("x" + i, 0);
+                registersGrid.Rows.Add("x" + i, "0x00000000");
+
             }
 
             memoryGrid.ColumnCount = 2;
@@ -74,8 +75,8 @@ namespace RiscV.Interface
         {
             for (int i = 0; i < 32; i++)
             {
-                registersGrid.Rows[i].Cells[1].Value =
-                    "0x" + registers.Read(i).ToString("X8");
+                registersGrid.Rows[i].Cells[1].Value ="0x" + registers.Read(i).ToString("X8");
+
             }
 
             int totalRows = memory.GetSize() / 4;
@@ -83,8 +84,7 @@ namespace RiscV.Interface
             for (int i = 0; i < totalRows; i++)
             {
                 int addr = i * 4;
-                memoryGrid.Rows[i].Cells[1].Value =
-                    "0x" + memory.ReadWord(addr).ToString("X8");
+                memoryGrid.Rows[i].Cells[1].Value ="0x" + memory.ReadWord(addr).ToString("X8");
             }
 
             UpdatePC();
@@ -252,7 +252,110 @@ namespace RiscV.Interface
             pcTextBox.Text = "0x" + cpu.GetPC().ToString("X8");
         }
 
-        private void resetButton_Click(object sender, EventArgs e)
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+            if (lastProgram.Count == 0)
+            {
+                MessageBox.Show("Nothing to load");
+                return;
+            }
+
+            LoadProgram(lastProgram);
+        }
+
+        private void nToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            programRichText.Clear();
+            assembledRichText.Clear();
+
+            cpu.Reset();
+            memory.Reset();
+            pc.Reset();
+
+            isFirstUpdate = true;
+            UpdateInterface();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Assembly Files (*.asm)|*.asm|All Files (*.*)|*.*";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.WriteAllText(dialog.FileName, programRichText.Text);
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Assembly Files (*.asm)|*.asm|All Files (*.*)|*.*";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                programRichText.Text = System.IO.File.ReadAllText(dialog.FileName);
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Assembly Files (*.asm)|*.asm|All Files (*.*)|*.*";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.File.WriteAllText(dialog.FileName, programRichText.Text);
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private async void runToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            isRunning = !isRunning;
+
+            runButton.Text = isRunning ? "Stop" : "Run";
+
+            while (isRunning)
+            {
+                bool running = cpu.ExecuteCycle();
+
+                if (!running)
+                {
+                    isRunning = false;
+                    runButton.Text = "Run";
+                    MessageBox.Show("Program finished");
+                    break;
+                }
+
+                UpdateInterface();
+                await Task.Delay(100);
+            }
+        }
+
+        private void stepInstructionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool running = cpu.ExecuteCycle();
+
+            if (!running)
+            {
+                MessageBox.Show("Program finished");
+                return;
+            }
+
+            UpdateInterface();
+        }
+
+        private void stepCycleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             isRunning = false;
             runButton.Text = "Run";
@@ -268,15 +371,21 @@ namespace RiscV.Interface
             UpdateInterface();
         }
 
-        private void loadButton_Click(object sender, EventArgs e)
+        private void clearMemoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lastProgram.Count == 0)
-            {
-                MessageBox.Show("Nothing to load");
-                return;
-            }
+            memory.Reset();
+            UpdateInterface();
+        }
 
-            LoadProgram(lastProgram);
+        private void resetToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            registers.Reset();
+            UpdateInterface();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
